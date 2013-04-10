@@ -28,6 +28,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   axisHeight: 20,
   axisPosition: 'bottom',
   indentSize: 20,
+  labelAlign: 'left',
 
   collapsable: true,
   scrubbable: true,
@@ -223,7 +224,9 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     this.updateRows(rowItems);
 
     if (labelsWidth > 0) {
-      var indentSize = this.get('indentSize'), showCircles;
+      var indentSize = this.get('indentSize'),
+          labelAlign = this.get('labelAlign'),
+          showCircles;
 
       showLinks = showLinks && indentSize > 0;
       showCircles = collapsable || showLinks;
@@ -281,10 +284,18 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         .attr('cy', 0)
         .attr('r', 6);
 
-      labelItems.selectAll('text')
+      var labelText = labelItems.selectAll('text');
+
+      labelText
         .attr('dx', showLinks ? 10 : 0) // padding-left
         .attr('dy', ".35em") // vertical-align: middle
         .text(function(n) { return n.label; });
+
+      if (labelAlign === 'right') {
+        labelText
+          .attr("text-anchor", "end")
+          .attr('x', function(n) { return labelsWidth + xScale(n.start) - 10; });
+      }
     }
 
     this.drawAxis();

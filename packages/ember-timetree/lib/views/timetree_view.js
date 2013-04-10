@@ -26,6 +26,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   height: 400,
   labelsWidth: 200,
   axisHeight: 20,
+  axisPosition: 'bottom',
   indentSize: 20,
 
   collapsable: true,
@@ -426,28 +427,35 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         contentHeight = this.get('contentHeight'),
         scrubbable = this.get('scrubbable'),
         selectable = this.get('selectable'),
-        brushable = this.get('brushable');
+        brushable = this.get('brushable'),
+        axisHeight = this.get('axisHeight'),
+        axisPosition = this.get('axisPosition'),
+        contentTop = axisPosition === 'top' ? axisHeight : 0,
+        axisTop = axisPosition === 'top' ? axisHeight : contentHeight;
+
 
     var svg = this.get('svg'),
         rows, labels, content, scrubber;
 
     var self = this;
 
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(" + labelsWidth + "," + axisTop + ")");
+
     rows = svg.append("g")
-              .attr('class', 'rows');
+              .attr('class', 'rows')
+              .attr("transform", "translate(0,"+contentTop+")");
 
     if (labelsWidth > 0) {
       labels = svg.append("g")
-                  .attr('class', 'labels');
+                  .attr('class', 'labels')
+                  .attr("transform", "translate(0,"+contentTop+")");
     }
 
     content = svg.append("g")
                .attr('class', 'content')
-               .attr("transform", "translate(" + labelsWidth + ",0)");
-
-    content.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + contentHeight + ")");
+               .attr("transform", "translate(" + labelsWidth + ","+contentTop+")");
 
     content.append("g")
       .attr("class", "bars");

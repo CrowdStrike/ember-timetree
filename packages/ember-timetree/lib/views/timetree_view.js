@@ -464,9 +464,11 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
     var self = this;
 
-    svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(" + labelsWidth + "," + axisTop + ")");
+    if (axisHeight > 0) {
+      svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(" + labelsWidth + "," + axisTop + ")");
+    }
 
     rows = svg.append("g")
               .attr('class', 'rows')

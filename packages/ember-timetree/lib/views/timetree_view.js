@@ -23,12 +23,14 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   tagName: 'svg',
 
   width: 750,
-  height: 400,
+  rowHeight: 15,
+  rowSpacing: 10,
   labelsWidth: 200,
   axisHeight: 20,
   axisPosition: 'bottom',
   indentSize: 20,
   labelAlign: 'left',
+  contentMargin: null, // { top: 0, left: 0, bottom: 0, right: 0 },
 
   collapsable: true,
   scrubbable: true,
@@ -70,19 +72,35 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   brushRange: null,
   range: null,
 
+  minimumWidth: Ember.computed(function() {
+    return this.get('labelsWidth') + 100;
+  }).property('labelsWidth'),
+
+  maximumWidth: Ember.computed(function() {
+    if (this.get('element')) {
+      return this.$().parent().width();
+    } else {
+      return 0;
+    }
+  }).property('element').volatile(),
+
   _width: Ember.computed(function() {
     var width = this.get('width');
+    if (width === 'auto') { width = this.get('maximumWidth'); }
+    return Math.max(this.get('minimumWidth'), width);
+  }).property('width', 'maximumWidth', 'minimumWidth'),
 
-    if (width === 'auto') {
-      if (this.get('element')) {
-        width = this.$().parent().width();
-      } else {
-        width = 0;
-      }
-    }
+  barsHeight: Ember.computed(function() {
+    return (this.get('rowHeight') + this.get('rowSpacing')) * this.get('content.length');
+  }).property('rowHeight', 'rowSpacing', 'content.length'),
 
-    return width;
-  }).property('width'),
+  contentHeight: Ember.computed(function() {
+    return this.get('barsHeight') + (this.get('contentMargin.top') || 0) + (this.get('contentMargin.bottom') || 0);
+  }).property('barsHeight'),
+
+  height: Ember.computed(function() {
+    return this.get('axisHeight') + this.get('contentHeight');
+  }).property('axisHeight', 'contentHeight'),
 
   _range: Ember.computed(function() {
     var range = this.get('range');
@@ -104,9 +122,9 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     return this.get('_width') - this.get('labelsWidth');
   }).property('_width', 'labelsWidth'),
 
-  contentHeight: Ember.computed(function() {
-    return this.get('height') - this.get('axisHeight');
-  }).property('height', 'axisHeight'),
+  barsWidth: Ember.computed(function() {
+    return this.get('contentWidth') - (this.get('contentMargin.left') || 0) - (this.get('contentMargin.right') || 0);
+  }).property('contentWidth', 'contentMargin.left', 'contentMargin.right'),
 
   timeFormat: Ember.computed(function() {
     return d3.time.format.utc("%H:%M:%S.%L");
@@ -122,7 +140,10 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   }).property(),
 
   yScale: Ember.computed(function() {
-    return d3.scale.ordinal().rangeRoundBands([0, this.get('contentHeight')], 0.2);
+    var rowHeight = this.get('rowHeight'),
+        rowSpacing = this.get('rowSpacing'),
+        paddingFactor = rowSpacing/(rowHeight+rowSpacing);
+    return d3.scale.ordinal().rangeRoundBands([0, this.get('barsHeight')], paddingFactor, paddingFactor/2);
   }).property(),
 
   xAxis: Ember.computed(function() {
@@ -174,11 +195,24 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   }).property('content'),
 
   adjustXScaleRange: Ember.observer(function() {
-    this.get('xScale').range([0, this.get('contentWidth')]);
-  }, 'contentWidth'),
+    this.get('xScale').range([0, this.get('barsWidth')]);
+  }, 'barsWidth'),
 
   adjustYScaleRange: Ember.observer(function() {
-    this.get('yScale').rangeRoundBands([0, this.get('contentHeight')], 0.2);
+    // TODO: This is a copy of `yScale`, clean it up
+    var rowHeight = this.get('rowHeight'),
+        rowSpacing = this.get('rowSpacing'),
+        paddingFactor = rowSpacing/(rowHeight+rowSpacing);
+    this.get('yScale').rangeRoundBands([0, this.get('barsHeight')], paddingFactor, paddingFactor/2);
+  }, 'barsHeight', 'rowHeight', 'rowSpacing'),
+
+  adjustScrubberHeight: Ember.observer(function() {
+    if (this.get('scrubbable')) {
+      var height = this.get('contentHeight'),
+          scrubber = this.get('svg').select('.scrubber');
+      scrubber.select('line').attr('y2', height);
+      scrubber.select('text').attr('y', height);
+    }
   }, 'contentHeight'),
 
   updateXAxisScale: Ember.observer(function() {
@@ -186,8 +220,11 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   }, 'xScale'),
 
   updateRows: function(rowItems) {
-    var yScale = this.get('yScale'),
-        width = this.get('_width');
+    var yScale = this.get('yScale').copy(),
+        width = this.get('_width'),
+        height = this.get('barsHeight');
+
+    yScale.rangeRoundBands([0, height], 0, 0);
 
     rowItems
         .attr('x', 0)
@@ -209,6 +246,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
     var width = this.get('_width'),
         labelsWidth = this.get('labelsWidth'),
+        leftPadding = this.get('contentMargin.left') || 0,
         svg = this.get('svg'),
         rows = svg.select('.rows'),
         labels = svg.select('.labels'),
@@ -225,7 +263,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         content = svg.select('.content');
 
     xScale.domain(range);
-    yScale.domain(d3.range(nodes.length));
+    yScale.domain(d3.range(this.get('content.length')));
 
     var rowItems = rows.selectAll('.row')
                         .data(nodes, function(n) { return n.id; });
@@ -341,7 +379,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     bars.exit().remove();
 
     bars
-        .attr("transform", function(n,i){ return "translate(" + xScale(n.start) + "," + yScale(i) + ")"; })
+        .attr("transform", function(n,i){ return "translate(" + (xScale(n.start) + leftPadding) + "," + yScale(i) + ")"; })
         .classed("collapsed", function(n) {
           return n._children;
         });
@@ -379,7 +417,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
           .call(brush)
         .selectAll("rect")
           .attr("y", -6)
-          .attr("height", contentHeight + 7);
+          .attr("height", contentHeight);
     }
 
     if (this.didRenderNodes) {
@@ -407,14 +445,29 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     if (!this.get('scrubbable')) { return; }
 
     var svg = this.get('svg'),
-        scrubber = svg.select('.content').select('.scrubber');
+        scrubber = svg.select('.content').select('.scrubber'),
+        xScale = this.get('xScale'),
+        contentWidth = this.get('contentWidth'),
+        leftPadding = this.get('contentMargin.left') || 0;
 
-    if (x === undefined) {
-      x = Number(scrubber.attr('x1'));
+    if (x === undefined) { x = 0; }
+
+    scrubber
+        .attr('transform', 'translate('+x+', 0)');
+
+    var text = scrubber.select('text');
+
+    text.text(x > 0 ? this.get("timeTickFormat")(xScale.invert(x-leftPadding)) : "");
+
+    var textWidth = text.node().getComputedTextLength ? text.node().getComputedTextLength() : 0;
+    if (x + textWidth * 1.5 > contentWidth) {
+      scrubber.classed('switched', true);
+      text.attr("text-anchor", 'end')
+          .attr('x', -4);
     } else {
-      scrubber
-        .attr('x1', x)
-        .attr('x2', x);
+      scrubber.classed('switched', false);
+      text.attr("text-anchor", 'start')
+          .attr('x', 4);
     }
 
     var bars = svg.select('.content').selectAll('.bar');
@@ -488,16 +541,24 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
       .attr("class", "bars");
 
     if (scrubbable) {
-      scrubber = content.append("line")
-                      .attr('class', 'scrubber')
-                      .attr('x1', 0)
-                      .attr('x2', 0)
-                      .attr('y1', 0)
-                      .attr('y2', contentHeight);
+      scrubber = content.append("g")
+                      .attr('class', 'scrubber');
+
+      scrubber.append('line')
+        .attr('x1', 0)
+        .attr('x2', 0)
+        .attr('y1', 0)
+        .attr('y2', contentHeight);
+
+      scrubber.append('text')
+        .attr('y', contentHeight);
     }
 
     if (scrubbable || selectable) {
       svg.on('mousemove', function(){
+        var contentWidth = self.get('contentWidth'),
+            contentHeight = self.get('contentHeight');
+
         var mouse = d3.mouse(content.node());
         if (mouse[1] >= 0 && mouse[1] <= contentHeight) {
           if (selectable) {
@@ -540,6 +601,6 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   },
 
   windowDidResize: function() {
-    this.notifyPropertyChange('_width');
+    this.notifyPropertyChange('maximumWidth');
   }
 });

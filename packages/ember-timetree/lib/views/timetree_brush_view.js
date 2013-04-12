@@ -5,7 +5,8 @@
 Ember.Timetree.TimetreeBrushView = Ember.Timetree.TimetreeView.extend({
   classNames: ['timetree-brush-view'],
 
-  height: 90,
+  rowHeight: 4,
+  rowSpacing: 2,
   labelsWidth: 0,
   collapsable: false,
   scrubbable: false,

@@ -38,7 +38,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   showLabels: true,
   showLinks: true,
 
-  attributeBindings: ['width', 'height'],
+  attributeBindings: ['_width:width', 'height'],
 
   classNames: ['timetree-view'],
 
@@ -70,6 +70,20 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   brushRange: null,
   range: null,
 
+  _width: Ember.computed(function() {
+    var width = this.get('width');
+
+    if (width === 'auto') {
+      if (this.get('element')) {
+        width = this.$().parent().width();
+      } else {
+        width = 0;
+      }
+    }
+
+    return width;
+  }).property('width'),
+
   _range: Ember.computed(function() {
     var range = this.get('range');
     if (range && range.length === 2) { return range; }
@@ -87,8 +101,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   }).property('range', 'rootNode'),
 
   contentWidth: Ember.computed(function() {
-    return this.get('width') - this.get('labelsWidth');
-  }).property('width', 'labelsWidth'),
+    return this.get('_width') - this.get('labelsWidth');
+  }).property('_width', 'labelsWidth'),
 
   contentHeight: Ember.computed(function() {
     return this.get('height') - this.get('axisHeight');
@@ -173,7 +187,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
   updateRows: function(rowItems) {
     var yScale = this.get('yScale'),
-        width = this.get('width');
+        width = this.get('_width');
 
     rowItems
         .attr('x', 0)
@@ -193,7 +207,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     var tree = this.get('tree'),
         nodes = tree.nodes(rootNode).slice(1); // Skip root node
 
-    var width = this.get('width'),
+    var width = this.get('_width'),
         labelsWidth = this.get('labelsWidth'),
         svg = this.get('svg'),
         rows = svg.select('.rows'),
@@ -375,7 +389,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
   nodesNeedRerender: Ember.observer(function() {
     Ember.run.once(this, 'renderNodes');
-  }, 'rootNode', 'contentHeight', '_range.[]'),
+  }, 'rootNode', 'height', '_width', '_range.[]'),
 
   doHighlight: function(y) {
     if (!this.get('selectable')) { return; }
@@ -514,5 +528,16 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     }
 
     this.renderNodes();
+
+    Ember.$(window).on('resize', Ember.$.proxy(this, 'windowDidResize'));
+    this.windowDidResize();
+  },
+
+  willDestroyElement: function() {
+    Ember.$(window).off('resize', Ember.$.proxy(this, 'windowDidResize'));
+  },
+
+  windowDidResize: function() {
+    this.notifyPropertyChange('_width');
   }
 });

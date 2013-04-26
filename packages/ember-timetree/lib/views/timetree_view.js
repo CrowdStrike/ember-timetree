@@ -372,7 +372,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         if (n.sections) {
           d3.select(this).selectAll('.section').data(n.sections).enter()
             .append('rect')
-              .attr('class', function(s) { return 'section '+s.className; });
+              .attr('class', function(s) { return 'section '+(s.className || ''); });
         }
       });
     });

@@ -237,6 +237,11 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     this.get('svg').select(".x.axis").call(this.get('xAxis'));
   },
 
+// This function is passed to d3, it's not called as a member of the View
+  durationFormatter: function(n) {
+    return (n.end - n.start)/1000 + 's';
+  },
+
   renderNodes: function() {
     var rootNode = this.get('rootNode');
     if (rootNode.children.length === 0) { return; }
@@ -255,6 +260,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         brushable = this.get('brushable'),
         showLabels = this.get('showLabels'),
         showLinks = this.get('showLinks'),
+        durationFormatter = this.get('durationFormatter'),
         range = this.get('_range');
 
     var xScale = this.get('xScale'),
@@ -406,7 +412,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
           .attr('y', function() { return yScale.rangeBand() / 2; })
           .attr('dx', 3) // padding-left
           .attr('dy', ".35em") // vertical-align: middle
-          .text(function(n) { return (n.end - n.start)/1000 + 's'; });
+          .text(durationFormatter);
     }
 
     if (brushable) {

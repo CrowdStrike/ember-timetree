@@ -118,6 +118,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     return [min, max];
   }).property('range', 'rootNode'),
 
+  _labelAt: function(i) { return d3.select(this.get('svg').selectAll('.labels .label')[0][i]); },
+
   contentWidth: Ember.computed(function() {
     return this.get('_width') - this.get('labelsWidth');
   }).property('_width', 'labelsWidth'),
@@ -436,14 +438,20 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   }, 'rootNode', 'height', '_width', '_range.[]'),
 
   doHighlight: function(y) {
+    var self = this, svg;
+
     if (!this.get('selectable')) { return; }
 
-    var svg = this.get('svg');
+    svg = this.get('svg');
     svg.select('.rows').selectAll('.row')
-      .classed('hover', function() {
+      .classed('hover', function(d, i) {
         var top = Number(this.getAttribute('y')),
-            bottom = top + Number(this.getAttribute('height'));
-        return top <= y && y < bottom;
+            bottom = top + Number(this.getAttribute('height')),
+            isSelected = top <= y && y < bottom;
+
+        self._labelAt(i).classed('hover', isSelected);
+
+        return isSelected;
       });
   },
 
@@ -582,11 +590,19 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
     if (selectable) {
       svg.on('click', function() {
-        var rowItems = rows.selectAll('.row');
-        rowItems.classed('selected', function(){
-          // FIXME: Not ideal to be checking classes here
-          return this.className.baseVal.match('hover');
+        var rowItems = rows.selectAll('.row'),
+            y = d3.mouse(svg.node())[1];
+
+        rowItems.classed('selected', function(d, i) {
+          var top = Number(this.getAttribute('y')),
+              bottom = top + Number(this.getAttribute('height')),
+              isSelected = top <= y && y < bottom;
+
+          self._labelAt(i).classed('selected', isSelected);
+
+          return isSelected;
         });
+
         self.set('selection', rowItems.filter('.selected').data().map(function (item) {
           return item.content || item;
         }));

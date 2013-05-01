@@ -469,7 +469,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     scrubber
         .attr('transform', 'translate('+x+', 0)');
 
-    var text = scrubber.select('text');
+    var text = scrubber.select('text')
+                       .attr('dy', -1);
 
     text.text(x > 0 ? this.get("timeTickFormat")(xScale.invert(x-leftPadding)) : "");
 

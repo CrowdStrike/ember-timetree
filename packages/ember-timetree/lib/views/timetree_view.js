@@ -61,7 +61,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
       sections: [{ start: 12345, end: 23456, className: 'active' },
                  { start: 23456, end: 67890, className: 'inactive' }],
 
-      // Content for selection, optional
+      // Content for selection, optional. If empty, the outer object is selected.
       content:  {Obj}
     ]
   */
@@ -587,7 +587,9 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
           // FIXME: Not ideal to be checking classes here
           return this.className.baseVal.match('hover');
         });
-        self.set('selection', rowItems.filter('.selected').data().mapProperty('content'));
+        self.set('selection', rowItems.filter('.selected').data().map(function (item) {
+          return item.content || item;
+        }));
       });
     }
 

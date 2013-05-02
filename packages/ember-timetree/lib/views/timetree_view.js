@@ -263,6 +263,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         showLabels = this.get('showLabels'),
         showLinks = this.get('showLinks'),
         durationFormatter = this.get('durationFormatter'),
+        applyLabel,
         range = this.get('_range');
 
     var xScale = this.get('xScale'),
@@ -364,25 +365,35 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
                       .data(nodes, function(n) { return n.id; });
 
     var barsEnter = bars.enter().append('g')
-                            .attr('class', function(n) { return 'bar '+n.className; });
+                            .attr('class', function(n) { return 'bar ' + n.className + ' ' + (n.sections ? 'sectional' : ''); });
 
-    barsEnter.append('rect')
-      .attr('class', 'duration');
+    var barsEnterDurationGroup = barsEnter.append('g')
+                                            .attr('class', 'whole duration')
+
+    barsEnterDurationGroup.append('rect');
+    barsEnterDurationGroup.append('text');
 
     barsEnter.call(function(sel) {
       sel.each(function(n, i) {
+        var sectionGroup;
         if (n.sections) {
-          d3.select(this).selectAll('.section').data(n.sections).enter()
-            .append('rect')
-              .attr('class', function(s) { return 'section '+(s.className || ''); });
+          sectionGroup = d3.select(this).selectAll('.section.duration').data(n.sections).enter()
+            .append('g')
+              .attr('class', function(s) { return 'section duration ' + (s.className || ''); })
+
+          sectionGroup.append('rect');
+          sectionGroup.append('text');
         }
       });
     });
 
-    if (showLabels) {
-      barsEnter.append('text')
-        .attr('class', 'duration');
-    }
+    applyLabel = function(selection) {
+      return selection
+        .attr('y', function() { return yScale.rangeBand() / 2; })
+        .attr('dx', 3) // padding-left
+        .attr('dy', ".35em") // vertical-align: middle
+        .text(durationFormatter);
+    };
 
     bars.exit().remove();
 
@@ -393,28 +404,33 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         });
 
 
-    bars.selectAll('rect.duration')
+    bars.selectAll('.duration rect')
         .attr('width', function(n) { return xScale(n.end) - xScale(n.start); })
         .attr('height', yScale.rangeBand());
 
     bars.call(function(sel) {
       sel.each(function(n, i) {
+        var sectionData;
         if (n.sections) {
-          d3.select(this).selectAll('.section').data(n.sections)
+          sectionData = d3.select(this).selectAll('.section').data(n.sections);
+          sectionData.select('rect')
               .attr('x', function(s) { return xScale(s.start) - xScale(n.start); })
               .attr('width', function(s) { return xScale(s.end) - xScale(s.start); })
               .attr('height', yScale.rangeBand());
+
+          if (showLabels) {
+            sectionData.select('text')
+              .attr('x', function(s) { return xScale(s.start) - xScale(n.start); })
+              .call(applyLabel);
+          }
         }
       });
     });
 
     if (showLabels) {
-      bars.selectAll('text.duration')
-          .attr('x', 0)
-          .attr('y', function() { return yScale.rangeBand() / 2; })
-          .attr('dx', 3) // padding-left
-          .attr('dy', ".35em") // vertical-align: middle
-          .text(durationFormatter);
+      bars.selectAll('.whole.duration text')
+        .attr('x', 0)
+        .call(applyLabel);
     }
 
     if (brushable) {
@@ -486,13 +502,18 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     }
 
     var bars = svg.select('.content').selectAll('.bar');
-    bars.classed('hover', function() {
+    bars.each(function() {
       // FIXME: This should be data based
       var transform = this.getAttribute('transform'),
-          match = transform.match(/translate\(([\d\.]+),([\d\.]+)\)/);
-      var start = Number(match[1]),
-          end = start + Number(d3.select(this).select('rect.duration').attr('width'));
-      return start <= x && x <= end;
+          match = transform.match(/translate\(([\d\.]+),([\d\.]+)\)/),
+          relStart = Number(match[1]);
+
+      d3.select(this).selectAll('.duration').classed('hover', function() {
+        var rect = d3.select(this).select('rect'),
+            start = relStart + Number(rect.attr('x') || 0),
+            end = start + Number(rect.attr('width'));
+        return start <= x && x <= end;
+      });
     });
   },
 

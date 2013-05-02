@@ -440,7 +440,6 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
       content.selectAll('.brush')
           .call(brush)
         .selectAll("rect")
-          .attr("y", -6)
           .attr("height", contentHeight);
     }
 

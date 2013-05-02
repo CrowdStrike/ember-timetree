@@ -1,0 +1,60 @@
+.chrome-devtools-timetree, .chrome-devtools-timetree .label text {
+  font-family: Arial;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+.chrome-devtools-timetree .scrubber line {
+  stroke: #999;
+  stroke-width: 1;
+}
+
+.chrome-devtools-timetree .x.axis path {
+  visibility: hidden;
+}
+
+.chrome-devtools-timetree .tick text, .chrome-devtools-timetree .scrubber text {
+  fill: #999;
+}
+
+.chrome-devtools-timetree .rows .row.selected {
+  fill: rgb(51, 103, 186);
+  stroke: rgb(62, 117, 195);
+  stroke-width: 1;
+}
+
+.chrome-devtools-timetree .selected.label text {
+  font-weight: bold;
+}
+
+.chrome-devtools-timetree .row.hover, .chrome-devtools-timetree .selected.label text {
+  fill: #fff;
+}
+
+.chrome-devtools-timetree .row:nth-child(odd) {
+  fill: #f3f3f3;
+}
+
+.chrome-devtools-timetree .bar rect {
+  stroke-width: 1;
+}
+
+.chrome-devtools-timetree .duration {
+  font-size: 10px;
+  font-weight: normal;
+}
+
+.chrome-devtools-timetree .network rect, .chrome-devtools-timetree .network.label.has-children circle {
+  fill: rgb(91, 141, 223);
+  stroke: rgb(95, 136, 205);
+}
+
+.chrome-devtools-timetree .layout rect, .chrome-devtools-timetree .layout.label.has-children circle {
+  fill: rgb(237, 185, 56);
+  stroke: rgb(212, 169, 56);
+}
+
+.chrome-devtools-timetree .javascript rect, .chrome-devtools-timetree .javascript.label.has-children circle {
+  fill: rgb(134, 96, 227);
+  stroke: rgb(131, 99, 207);
+}

@@ -2,9 +2,9 @@
 
 Visualize timeline data that is also hierarchical. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 
-<a href="https://CrowdStrike.github.io/ember-timetree"><img src="examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
+<a href="http://CrowdStrike.github.io/ember-timetree"><img src="examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
 
-Peep [the demo](https://CrowdStrike.github.io/ember-timetree).
+Peep [the demo](http://CrowdStrike.github.io/ember-timetree).
 
 ## Basic Usage
 
@@ -106,7 +106,7 @@ selection:      null,      // bind this to the selected row
 brushRange:     null,      // bind this to a TimetreeBrushView
 ```
 
-View-source on [the demo page](https://CrowdStrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
+View-source on [the demo page](http://CrowdStrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
 
 ## Building
 

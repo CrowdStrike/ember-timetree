@@ -72,6 +72,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   brushRange: null,
   range: null,
 
+  _translateRegex: /translate\(([\d\.]+),\s*([\d\.]+)\)/,
+
   minimumWidth: Ember.computed(function() {
     return this.get('labelsWidth') + 100;
   }).property('labelsWidth'),
@@ -259,6 +261,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         labels = svg.select('.labels'),
         timeTickFormat = this.get('timeTickFormat'),
         collapsable = this.get('collapsable'),
+        scrubbable = this.get('scrubbable'),
         brushable = this.get('brushable'),
         showLabels = this.get('showLabels'),
         showLinks = this.get('showLinks'),
@@ -433,6 +436,10 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         .call(applyLabel);
     }
 
+    if (scrubbable) {
+      this.doScrub(this._currentScrubberX());
+    }
+
     if (brushable) {
       var brush = this.get('brush'),
           contentHeight = this.get('contentHeight');
@@ -477,7 +484,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         scrubber = svg.select('.content').select('.scrubber'),
         xScale = this.get('xScale'),
         contentWidth = this.get('contentWidth'),
-        leftPadding = this.get('contentMargin.left') || 0;
+        leftPadding = this.get('contentMargin.left') || 0,
+        self = this;
 
     if (x === undefined) { x = 0; }
 
@@ -504,7 +512,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     bars.each(function() {
       // FIXME: This should be data based
       var transform = this.getAttribute('transform'),
-          match = transform.match(/translate\(([\d\.]+),([\d\.]+)\)/),
+          match = self._translateRegex.exec(transform),
           relStart = Number(match[1]);
 
       d3.select(this).selectAll('.duration').classed('hover', function() {
@@ -514,6 +522,15 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         return start <= x && x <= end;
       });
     });
+  },
+
+  _currentScrubberX: function() {
+    var scrubber = this.get('svg').select('.scrubber'),
+        transform = !scrubber.empty() && scrubber.attr('transform'),
+        match = this._translateRegex.exec(transform) || [],
+        translateX = match[1];
+
+    return translateX ? Number(translateX) : undefined;
   },
 
   doBrush: function() {

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ember Timetree by CrowdStrike</title>
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+  <link rel="stylesheet" href="examples/css/timetree_basic.css">
+  <link rel="stylesheet" href="examples/css/timetree_chrome_devtools.css">
+  <style>
+    html, body {
+      margin: 40px;
+    }
+    header, #app {
+      margin-bottom: 60px;
+    }
+    .title a {
+      color: #333333;
+    }
+    .logo {
+      margin-left: 2px;
+    }
+    .label {
+      margin-left: 20px;
+    }
+    .timetree-view {
+      margin: 20px;
+      display: block;
+    }
+    .timetree-view .label {
+      text-shadow: none;
+    }
+    .example-selection {
+      font-style: italic;
+    }
+    .invisible {
+      visibility: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="title"><a href="https://github.com/CrowdStrike/ember-timetree">Ember Timetree</a></h1>
+
+    <h2 class="logo"><a href="http://crowdstrike.com" target="_blank"><img src="examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike"/></a></h2>
+
+    <h1><small>Visualize hierarchical timeline data. Built with <a href="http://emberjs.com">Ember.js</a> and <a href="http://d3js.org">D3.js</a>.</small></h1>
+
+    <a href="https://github.com/CrowdStrike/ember-timetree"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+  </header>
+
+  <div id="app"></div>
+
+  <script type="text/x-handlebars" data-template-name="index">
+    <div class="example">
+      <h3>Example #1: Visualize Web Page Load Times</h3>
+
+      <figcaption>
+        <p>
+          Web programmers are familiar with profiling page load and render times. Load events can
+          be categorized hierarchically. For example, you can rollup events into network requests,
+          layout, and JavaScript. Each event starts and stops possibly multiple times. Sounds like
+          a job for a Timetree.
+        </p>
+        <p>
+          <strong>Hover</strong> on the timeline to scrub; see the exact timestamp of the x-axis, and the duration of events
+          occuring at that instant.
+        </p>
+      </figcaption>
+
+      {{view Ember.Timetree.TimetreeView contentBinding="App.ApiData"}}
+    </div>
+
+    <div class="example">
+      <h3>Example #2: Brush View</h3>
+
+      <figcaption>
+        <p>
+          Same data as before, but there is a 2nd view at the bottom,
+          <code>TimetreeBrushView</code>. Drag-select it to zoom in on the original
+          <code>TimetreeView</code>. You can drag this selection to focus different time
+          slices. The original view is linked to the brush view via the <code>rangeBinding</code> and <code>brushRangeBinding</code> attributes respectively.
+        </p>
+        <p>
+          You can also bind to the selected item in the hierarchy via the
+          <code>selectionBinding</code> attribute. <strong>Try clicking</strong> on an item in the main view.
+        </p>
+      </figcaption>
+
+      <p {{bindAttr class=":label :label-info selectedEvents::invisible"}}>
+        You selected the event named <span class="example-selection">{{ selectedEvents.firstObject.label }}</span>.
+      </p>
+
+      {{view Ember.Timetree.TimetreeView contentBinding="App.ApiData" selectionBinding="selectedEvents" rangeBinding="eventsRange_example2"}}
+      {{view Ember.Timetree.TimetreeBrushView contentBinding="App.ApiData" brushRangeBinding="eventsRange_example2"}}
+    </div>
+
+    <div class="example">
+      <h3>Example #3: Styling</h3>
+
+      <figcaption>
+        <p>
+          So far, the examples have used the barebone
+          <a href="examples/css/timetree_basic.css"><code>timetree_basic.css</code></a>, included in the
+          project, to get you started. Check out
+          <a href="examples/css/timetree_chrome_devtools.css"><code>timetree_chrome_devtools.css</code></a>
+          which styles the timetree similarly to Chrome DevTools. It's also an example of
+          extending <code>TimetreeView</code> by overriding its time-formatting methods.
+        </p>
+      </figcaption>
+
+      {{view App.ChromeDevToolsTimetreeView contentBinding="App.ApiData" classNames="chrome-devtools-timetree" rowHeight=12}}
+    </div>
+  </script>
+
+  <p>
+    Ready to use Ember Timetree in your project? <a href="https://github.com/CrowdStrike/ember-timetree">Download the source and check out the README on GitHub</a>.
+  </p>
+
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.3/handlebars.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/ember.js/1.0.0-rc.3/ember.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.0.8/d3.min.js"></script>
+  <script src="ember-timetree.min.js"></script>
+
+  <!-- Not required. Just for demo. -->
+  <script src="demo/js/app.js"></script>
+
+</body>
+</html>

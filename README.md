@@ -1,6 +1,6 @@
 # Ember Timetree
 
-Visualize timeline data that is also hierarchical. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
+Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 
 <a href="http://CrowdStrike.github.io/ember-timetree"><img src="examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
 

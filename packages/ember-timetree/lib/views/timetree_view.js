@@ -210,7 +210,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
             }
           }
         };
-            
+
     computeTotal([this.get("rootNode")]);
     return total;
   }).property("rootNode"),
@@ -390,7 +390,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
                             .attr('class', function(n) { return 'bar ' + n.className + ' ' + (n.sections ? 'sectional' : ''); });
 
     var barsEnterDurationGroup = barsEnter.append('g')
-                                            .attr('class', 'whole duration')
+                                            .attr('class', 'whole duration');
 
     barsEnterDurationGroup.append('rect');
     barsEnterDurationGroup.append('text');
@@ -401,7 +401,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         if (n.sections) {
           sectionGroup = d3.select(this).selectAll('.section.duration').data(n.sections).enter()
             .append('g')
-              .attr('class', function(s) { return 'section duration ' + (s.className || ''); })
+              .attr('class', function(s) { return 'section duration ' + (s.className || ''); });
 
           sectionGroup.append('rect');
           sectionGroup.append('text');

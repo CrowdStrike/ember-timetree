@@ -684,5 +684,13 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
   windowDidResize: function() {
     this.notifyPropertyChange('maximumWidth');
+  },
+
+  init: function() {
+    this._super();
+    this.adjustXScaleRange();
+    this.adjustYScaleRange();
+    this.adjustScrubberHeight();
+    this.updateXAxisScale();
   }
 });

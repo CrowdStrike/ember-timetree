@@ -1,10 +1,10 @@
 # Ember Timetree
 
-Visualize timeline data that is also hierarchical. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
+Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 
-<a href="https://CrowdStrike.github.io/ember-timetree"><img src="examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
+<a href="http://CrowdStrike.github.io/ember-timetree"><img src="examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
 
-Peep [the demo](https://CrowdStrike.github.io/ember-timetree).
+Peep [the demo](http://CrowdStrike.github.io/ember-timetree).
 
 ## Basic Usage
 
@@ -62,6 +62,10 @@ To listen for timetree clicks, set the `selectionBinding` attribute on the view.
 
 ember-timetree won't transform the `content` field but it may transform the row object, so don't count on the latter being identical to your original input.
 
+### Resize on Collapse
+
+If you set the 'resizeOnCollapse' attribute to true on the view, the height of the tree will resize when collapsing a node. This is nice when you have really long tree and you do not want white space when a node is collapsed.
+
 ### Brush View
 
 Want to zoom and drag to focus anywhere on your timeline? After the main view, add a `Ember.Timetree.TimetreeBrushView`, and link the two via the `rangeBinding` and `brushRangeBinding` attributes, respectively.
@@ -94,6 +98,7 @@ labelAlign:     'left',
 contentMargin:  null,      // e.g. { top: 0, left: 0, bottom: 0, right: 0 },
 
 collapsable:    true,      // can collapse hierarchy items?
+resizeOnCollapse: false,   // resize the height of the tree when collapsing a node
 scrubbable:     true,      // draw the scrubber (on hover)?
 selectable:     true,      // can select rows (on click)?
 brushable:      false,     // can drag-click and drag to zoom?
@@ -106,18 +111,20 @@ selection:      null,      // bind this to the selected row
 brushRange:     null,      // bind this to a TimetreeBrushView
 ```
 
-View-source on [the demo page](https://CrowdStrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
+View-source on [the demo page](http://CrowdStrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
 
-## Building
+## Development
 
-Same instructions as Ember itself\*.
+### Building
 
-1. Run `bundle install` to fetch the necessary Ruby gems.
-2. Run `rake dist` to build into the `dist/` directory.
+1. `bundle install` to fetch the necessary Ruby gems.
+2. `bundle exec rake dist` to build into the `dist/` directory.
 
-To run the tests, `rake test`.
+To run the tests, `bundle exec rake test`.
 
-\*See also [ember-dev](https://github.com/emberjs/ember-dev) for more on best practices for Ember packaging.
+These steps were based on [`ember-dev`'s `ruby`
+branch](https://github.com/emberjs/ember-dev/tree/ruby), from back in the day.
+This repo needs a JavaScript-based build.
 
 ## Credits
 

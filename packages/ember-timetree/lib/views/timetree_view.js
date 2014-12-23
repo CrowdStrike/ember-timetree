@@ -36,6 +36,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   scrubbable: true,
   selectable: true,
   brushable: false,
+  resizeOnCollapse: false,
 
   showLabels: true,
   showLinks: true,
@@ -72,7 +73,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   brushRange: null,
   range: null,
 
-  _translateRegex: /translate\(([\d\.]+),\s*([\d\.]+)\)/,
+  _translateRegex: /translate\(([\d\.]+),?\s*([\d\.]+)\)/,
 
   minimumWidth: Ember.computed(function() {
     return this.get('labelsWidth') + 100;
@@ -93,8 +94,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   }).property('width', 'maximumWidth', 'minimumWidth'),
 
   barsHeight: Ember.computed(function() {
-    return (this.get('rowHeight') + this.get('rowSpacing')) * this.get('content.length');
-  }).property('rowHeight', 'rowSpacing', 'content.length'),
+    return (this.get('rowHeight') + this.get('rowSpacing')) * (this.get("resizeOnCollapse") ? this.get("visibleNodeCount") : this.get('content.length'));
+  }).property('rowHeight', 'rowSpacing', 'content.length', 'visibleNodeCount', 'resizeOnCollapse'),
 
   contentHeight: Ember.computed(function() {
     return this.get('barsHeight') + (this.get('contentMargin.top') || 0) + (this.get('contentMargin.bottom') || 0);
@@ -198,6 +199,22 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     return rootNode;
   }).property('content'),
 
+  visibleNodeCount: Ember.computed(function(){
+    var total = 1,
+        computeTotal = function(node){
+          for( var i = 0; i < node.length; i++){
+            var n = node[i];
+            if( n.children ){
+              total += n.children.length;
+              computeTotal( n.children);
+            }
+          }
+        };
+
+    computeTotal([this.get("rootNode")]);
+    return total;
+  }).property("rootNode"),
+
   adjustXScaleRange: Ember.observer(function() {
     this.get('xScale').range([0, this.get('barsWidth')]);
   }, 'barsWidth'),
@@ -275,7 +292,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         content = svg.select('.content');
 
     xScale.domain(range);
-    yScale.domain(d3.range(this.get('content.length')));
+    yScale.domain(d3.range(this.get("resizeOnCollapse") ? this.get("visibleNodeCount") : this.get('content.length')));
 
     var rowItems = rows.selectAll('.row')
                         .data(nodes, function(n) { return n.id; });
@@ -327,6 +344,8 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
               self.toggleNode(n);
               self.renderNodes();
             });
+          // update after initial draw if nodes changed
+          labelItems.selectAll("circle").data(nodes, function(n) { return n.id; });
         }
       }
 
@@ -371,7 +390,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
                             .attr('class', function(n) { return 'bar ' + n.className + ' ' + (n.sections ? 'sectional' : ''); });
 
     var barsEnterDurationGroup = barsEnter.append('g')
-                                            .attr('class', 'whole duration')
+                                            .attr('class', 'whole duration');
 
     barsEnterDurationGroup.append('rect');
     barsEnterDurationGroup.append('text');
@@ -382,7 +401,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         if (n.sections) {
           sectionGroup = d3.select(this).selectAll('.section.duration').data(n.sections).enter()
             .append('g')
-              .attr('class', function(s) { return 'section duration ' + (s.className || ''); })
+              .attr('class', function(s) { return 'section duration ' + (s.className || ''); });
 
           sectionGroup.append('rect');
           sectionGroup.append('text');
@@ -549,6 +568,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
       node.children = node._children;
       delete node._children;
     }
+    this.notifyPropertyChange("visibleNodeCount");
   },
 
   didInsertElement: function() {
@@ -563,6 +583,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         contentTop = axisPosition === 'top' ? axisHeight : 0,
         axisTop = axisPosition === 'top' ? axisHeight : contentHeight;
 
+    this.adjustScrubberHeight();
 
     var svg = this.get('svg'),
         rows, labels, content, scrubber;
@@ -664,5 +685,12 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
 
   windowDidResize: function() {
     this.notifyPropertyChange('maximumWidth');
+  },
+
+  init: function() {
+    this._super();
+    this.adjustXScaleRange();
+    this.adjustYScaleRange();
+    this.updateXAxisScale();
   }
 });

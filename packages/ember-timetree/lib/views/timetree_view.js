@@ -583,6 +583,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
         contentTop = axisPosition === 'top' ? axisHeight : 0,
         axisTop = axisPosition === 'top' ? axisHeight : contentHeight;
 
+    this.adjustScrubberHeight();
 
     var svg = this.get('svg'),
         rows, labels, content, scrubber;
@@ -690,7 +691,6 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
     this._super();
     this.adjustXScaleRange();
     this.adjustYScaleRange();
-    this.adjustScrubberHeight();
     this.updateXAxisScale();
   }
 });

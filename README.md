@@ -113,16 +113,18 @@ brushRange:     null,      // bind this to a TimetreeBrushView
 
 View-source on [the demo page](http://CrowdStrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
 
-## Building
+## Development
 
-Same instructions as Ember itself\*.
+### Building
 
-1. Run `bundle install` to fetch the necessary Ruby gems.
-2. Run `rake dist` to build into the `dist/` directory.
+1. `bundle install` to fetch the necessary Ruby gems.
+2. `bundle exec rake dist` to build into the `dist/` directory.
 
-To run the tests, `rake test`.
+To run the tests, `bundle exec rake test`.
 
-\*See also [ember-dev](https://github.com/emberjs/ember-dev) for more on best practices for Ember packaging.
+These steps were based on [`ember-dev`'s `ruby`
+branch](https://github.com/emberjs/ember-dev/tree/ruby), from back in the day.
+This repo needs a JavaScript-based build.
 
 ## Credits
 

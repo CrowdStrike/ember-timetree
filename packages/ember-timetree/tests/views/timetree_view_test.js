@@ -102,3 +102,23 @@ test("renders content", function() {
 
   equal(view.$('.content .bar').length, 9);
 });
+
+test("handles transform: translate in Webkit", function() {
+  var translate = "translate(30.12, 42.999)";
+  var match;
+  view = Ember.Timetree.TimetreeView.create();
+  match = view._translateRegex.exec(translate);
+  equal(match.length, 3);
+  equal(match[1], "30.12");
+  equal(match[2], "42.999");
+});
+
+test("handles transform: translate in IE", function() {
+  var translate = "translate(30.12 42.999)";
+  var match;
+  view = Ember.Timetree.TimetreeView.create();
+  match = view._translateRegex.exec(translate);
+  equal(match.length, 3);
+  equal(match[1], "30.12");
+  equal(match[2], "42.999");
+});

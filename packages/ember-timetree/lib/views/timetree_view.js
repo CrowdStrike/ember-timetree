@@ -73,7 +73,7 @@ Ember.Timetree.TimetreeView = Ember.View.extend({
   brushRange: null,
   range: null,
 
-  _translateRegex: /translate\(([\d\.]+),\s*([\d\.]+)\)/,
+  _translateRegex: /translate\(([\d\.]+),?\s*([\d\.]+)\)/,
 
   minimumWidth: Ember.computed(function() {
     return this.get('labelsWidth') + 100;

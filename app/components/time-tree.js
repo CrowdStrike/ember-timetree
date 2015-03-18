@@ -2,5 +2,5 @@
 // This file is subject to the terms and conditions of the BSD License.
 // See the file LICENSE.md in the main directory for details
 
-import TimetreeComponent from 'ember-timetree/components/cs-timetree';
-export default TimetreeComponent;
+import TimeTreeComponent from 'ember-timetree/components/time-tree';
+export default TimeTreeComponent;

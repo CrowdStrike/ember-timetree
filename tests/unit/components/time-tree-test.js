@@ -5,12 +5,12 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 
-moduleForComponent('cs-timetree');
+moduleForComponent('time-tree');
 
 test('it renders', function(assert) {
   assert.expect(2);
 
-  var component = this.subject();
+  let component = this.subject();
   assert.equal(component._state, 'preRender');
 
   this.render();

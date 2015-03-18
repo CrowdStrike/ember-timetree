@@ -2,5 +2,5 @@
 // This file is subject to the terms and conditions of the BSD License.
 // See the file LICENSE.md in the main directory for details
 
-import TimetreeBrushComponent from 'ember-timetree/components/cs-timetree-brush';
-export default TimetreeBrushComponent;
+import TimeTreeBrushComponent from 'ember-timetree/components/time-tree-brush';
+export default TimeTreeBrushComponent;

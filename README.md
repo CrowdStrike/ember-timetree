@@ -2,9 +2,9 @@
 
 Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 
-<a href="http://CrowdStrike.github.io/ember-timetree"><img src="examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
+<a href="http://crowdstrike.github.io/ember-timetree"><img src="//crowdstrike.github.io/ember-timetree/examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
 
-Peep [the demo](http://CrowdStrike.github.io/ember-timetree).
+Peep [the demo](http://crowdstrike.github.io/ember-timetree).
 
 ## Basic Usage
 
@@ -70,7 +70,7 @@ If you set the 'resizeOnCollapse' attribute to true on the view, the height of t
 
 Want to zoom and drag to focus anywhere on your timeline? After the main view, add a `Ember.Timetree.TimetreeBrushView`, and link the two via the `rangeBinding` and `brushRangeBinding` attributes, respectively.
 
-![brush view](examples/screenshot_brush.png "brush view")
+![brush view](//crowdstrike.github.io/ember-timetree/examples/screenshot_brush.png "brush view")
 
 ### Extending
 
@@ -111,7 +111,7 @@ selection:      null,      // bind this to the selected row
 brushRange:     null,      // bind this to a TimetreeBrushView
 ```
 
-View-source on [the demo page](http://CrowdStrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
+View-source on [the demo page](http://crowdstrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
 
 ## Development
 
@@ -135,9 +135,8 @@ View-source on [the demo page](http://CrowdStrike.github.io/ember-timetree) to g
 
 * `ember build`
 
+For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
 
 ## Credits
 
-<a href="http://crowdstrike.com"><img src="examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike" width="240" height="42"/></a>
-
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
+<a href="http://crowdstrike.com"><img src="//crowdstrike.github.io/ember-timetree/examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike" width="240" height="42"/></a>

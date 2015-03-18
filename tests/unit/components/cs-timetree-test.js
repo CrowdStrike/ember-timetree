@@ -21,7 +21,7 @@ test('it renders', function(assert) {
 test('it renders content', function(assert) {
   assert.expect(1);
 
-  var events = [{
+  let events = [{
       'id': 1,
       'label': 'One',
       'start': 1347800918,
@@ -74,7 +74,7 @@ test('it renders content', function(assert) {
       'parent': 7
   }];
 
-  var component = this.subject();
+  let component = this.subject();
 
   Ember.run(function() {
     component.set('content', events);
@@ -86,9 +86,9 @@ test('it renders content', function(assert) {
 test('handles transform: translate in Webkit', function(assert) {
   assert.expect(3);
 
-  var translate = 'translate(30.12, 42.999)';
-  var component = this.subject();
-  var match = component._translateRegex.exec(translate);
+  let translate = 'translate(30.12, 42.999)';
+  let component = this.subject();
+  let match = component._translateRegex.exec(translate);
 
   assert.equal(match.length, 3);
   assert.equal(match[1], '30.12');
@@ -99,9 +99,9 @@ test('handles transform: translate in IE', function(assert) {
   assert.expect(3);
 
   // Notice that IE doesn't have comma between translate x, y!
-  var translate = 'translate(30.12 42.999)';
-  var component = this.subject();
-  var match = component._translateRegex.exec(translate);
+  let translate = 'translate(30.12 42.999)';
+  let component = this.subject();
+  let match = component._translateRegex.exec(translate);
 
   assert.equal(match.length, 3);
   assert.equal(match[1], '30.12');

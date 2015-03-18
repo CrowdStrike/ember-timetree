@@ -4,7 +4,7 @@
 
 import TimetreeComponent from './timetree';
 
-var TimetreeBrushComponent = TimetreeComponent.extend({
+const TimetreeBrushComponent = TimetreeComponent.extend({
   classNames: ['timetree-brush-view'],
 
   rowHeight: 4,

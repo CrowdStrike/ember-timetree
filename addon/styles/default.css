@@ -1,0 +1,118 @@
+.timetree-view, .timetree-brush-view {
+  shape-rendering: crispEdges;
+}
+
+.timetree-view text, .timetree-brush-view text {
+  shape-rendering: geometricPrecision;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.timetree-view .row, .timetree-brush-view .row {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.timetree-view .row.hover, .timetree-brush-view .row.hover {
+  fill: #e3e3e3;
+}
+
+.timetree-view .row.selected, .timetree-brush-view .row.selected {
+  fill: #e3e3e3;
+}
+
+.timetree-view .link, .timetree-brush-view .link {
+  fill: none;
+  stroke: #b3b3b3;
+  stroke-width: 1px;
+}
+
+.timetree-view .label text, .timetree-brush-view .label text {
+  cursor: pointer;
+  fill: #1a1a1a;
+}
+
+.timetree-view .label circle, .timetree-brush-view .label circle {
+  display: none;
+  shape-rendering: geometricPrecision;
+}
+
+.timetree-view .label.has-children circle, .timetree-brush-view .label.has-children circle {
+  fill: white;
+  stroke: #626366;
+  stroke-width: 2;
+  display: block;
+  cursor: pointer;
+}
+
+.timetree-view .label.has-children .text, .timetree-brush-view .label.has-children .text {
+  transform: translate(0, 0);
+}
+
+.timetree-view .label.has-children.closed circle, .timetree-brush-view .label.has-children.closed circle {
+  fill: #626366;
+}
+
+.timetree-view .axis .axis-label, .timetree-brush-view .axis .axis-label {
+  fill: #b3b3b3;
+  text-anchor: middle;
+}
+
+.timetree-view .axis .axis-label:nth-child(1), .timetree-brush-view .axis .axis-label:nth-child(1) {
+  text-anchor: start;
+}
+
+.timetree-view .axis .axis-label:last-child, .timetree-brush-view .axis .axis-label:last-child {
+  text-anchor: end;
+}
+
+.timetree-view .seperator, .timetree-brush-view .seperator {
+  stroke-width: 2;
+  stroke: #e6e6e6;
+}
+
+.timetree-view .scrubber line, .timetree-brush-view .scrubber line {
+  stroke: #1a1a1a;
+  stroke-width: 2;
+}
+
+.timetree-view .brush .extent, .timetree-brush-view .brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+}
+
+.timetree-view .duration, .timetree-view .section {
+  fill: #626366;
+}
+
+.timetree-view .duration text, .timetree-brush-view .duration text {
+  display: none;
+  fill: #fff;
+}
+
+.timetree-view .sectional .whole {
+  visibility: hidden;
+}
+
+.timetree-view .hover text, .timetree-brush-view .hover text {
+  display: block;
+}
+
+.timetree-view {
+  border-bottom: solid 2px #e6e6e6;
+}
+
+.timetree-brush-view {
+  border-left: solid 2px #e6e6e6;
+}
+
+.timetree-brush-view .x.axis path, .timetree-brush-view .x.axis line {
+  fill: none;
+  stroke: #626366;
+  stroke-width: 2px;
+}
+
+.timetree-brush-view .x.axis .domain {
+  display: none;
+}

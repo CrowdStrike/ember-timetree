@@ -1,4 +1,4 @@
-# Ember Timetree
+# ember-timetree
 
 Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 
@@ -115,17 +115,29 @@ View-source on [the demo page](http://CrowdStrike.github.io/ember-timetree) to g
 
 ## Development
 
+### Installation
+
+* `git clone` this repository
+* `npm install`
+* `bower install`
+
+### Running
+
+* `ember server`
+* Visit your app at http://localhost:4200.
+
+### Running Tests
+
+* `ember test`
+* `ember test --server`
+
 ### Building
 
-1. `bundle install` to fetch the necessary Ruby gems.
-2. `bundle exec rake dist` to build into the `dist/` directory.
+* `ember build`
 
-To run the tests, `bundle exec rake test`.
-
-These steps were based on [`ember-dev`'s `ruby`
-branch](https://github.com/emberjs/ember-dev/tree/ruby), from back in the day.
-This repo needs a JavaScript-based build.
 
 ## Credits
 
 <a href="http://crowdstrike.com"><img src="examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike" width="240" height="42"/></a>
+
+For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).

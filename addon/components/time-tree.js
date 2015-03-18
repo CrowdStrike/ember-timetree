@@ -206,11 +206,11 @@ const TimeTreeComponent = Ember.Component.extend({
     return total;
   }).property('rootNode'),
 
-  adjustXScaleRange: Ember.observer(function() {
+  adjustXScaleRange: Ember.on('init', Ember.observer(function() {
     this.get('xScale').range([0, this.get('barsWidth')]);
-  }, 'barsWidth'),
+  }, 'barsWidth')),
 
-  adjustYScaleRange: Ember.observer(function() {
+  adjustYScaleRange: Ember.on('init', Ember.observer(function() {
     // TODO: This is a copy of `yScale`, clean it up
     let rowHeight = this.get('rowHeight');
     let rowSpacing = this.get('rowSpacing');
@@ -221,7 +221,7 @@ const TimeTreeComponent = Ember.Component.extend({
         paddingFactor,
         paddingFactor / 2
       );
-  }, 'barsHeight', 'rowHeight', 'rowSpacing'),
+  }, 'barsHeight', 'rowHeight', 'rowSpacing')),
 
   adjustScrubberHeight: Ember.observer(function() {
     if (this.get('scrubbable')) {
@@ -232,9 +232,9 @@ const TimeTreeComponent = Ember.Component.extend({
     }
   }, 'contentHeight'),
 
-  updateXAxisScale: Ember.observer(function() {
+  updateXAxisScale: Ember.on('init', Ember.observer(function() {
     this.get('xAxis').scale(this.get('xScale'));
-  }, 'xScale'),
+  }, 'xScale')),
 
   updateRows(rowItems) {
     let yScale = this.get('yScale').copy();
@@ -650,24 +650,19 @@ const TimeTreeComponent = Ember.Component.extend({
     }
 
     this.renderNodes();
+  },
 
-    Ember.$(window).on('resize', Ember.$.proxy(this, 'windowDidResize'));
+  setupWindowResizeListener: Ember.on('didInsertElement', function() {
+    Ember.$(window).on('resize.' + this.get('elementId'), Ember.run.bind(this, 'windowDidResize'));
     this.windowDidResize();
-  },
+  }),
 
-  willDestroyElement() {
-    Ember.$(window).off('resize', Ember.$.proxy(this, 'windowDidResize'));
-  },
+  teardownWindowResizeListener: Ember.on('willDestroyElement', function() {
+    Ember.$(window).off('resize.' + this.get('elementId'));
+  }),
 
   windowDidResize() {
     this.notifyPropertyChange('maximumWidth');
-  },
-
-  init() {
-    this._super();
-    this.adjustXScaleRange();
-    this.adjustYScaleRange();
-    this.updateXAxisScale();
   }
 });
 

@@ -2,7 +2,7 @@
 
 Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 
-<a href="http://crowdstrike.github.io/ember-timetree"><img src="//crowdstrike.github.io/ember-timetree/examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
+<a href="http://crowdstrike.github.io/ember-timetree"><img src="https://crowdstrike.github.io/ember-timetree/examples/screenshot_timetree.png" alt="timetree example" title="Peep the demo" align="middle"/></a>
 
 Peep [the demo](http://crowdstrike.github.io/ember-timetree).
 
@@ -70,7 +70,7 @@ If you set the 'resizeOnCollapse' attribute to true on the view, the height of t
 
 Want to zoom and drag to focus anywhere on your timeline? After the main view, add a `Ember.Timetree.TimetreeBrushView`, and link the two via the `rangeBinding` and `brushRangeBinding` attributes, respectively.
 
-![brush view](//crowdstrike.github.io/ember-timetree/examples/screenshot_brush.png "brush view")
+![brush view](https://crowdstrike.github.io/ember-timetree/examples/screenshot_brush.png "brush view")
 
 ### Extending
 
@@ -139,4 +139,4 @@ For more information on using ember-cli, visit [http://www.ember-cli.com/](http:
 
 ## Credits
 
-<a href="http://crowdstrike.com"><img src="//crowdstrike.github.io/ember-timetree/examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike" width="240" height="42"/></a>
+<a href="http://crowdstrike.com"><img src="https://crowdstrike.github.io/ember-timetree/examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike" width="240" height="42"/></a>

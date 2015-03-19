@@ -1,0 +1,60 @@
+.time-tree, .time-tree .label text {
+  font-family: Arial;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+.time-tree .scrubber line {
+  stroke: #999;
+  stroke-width: 1;
+}
+
+.time-tree .x.axis path {
+  visibility: hidden;
+}
+
+.time-tree .tick text, .time-tree .scrubber text {
+  fill: #999;
+}
+
+.time-tree .rows .row.selected {
+  fill: rgb(51, 103, 186);
+  stroke: rgb(62, 117, 195);
+  stroke-width: 1;
+}
+
+.time-tree .selected.label text {
+  font-weight: bold;
+}
+
+.time-tree .row.hover, .time-tree .selected.label text {
+  fill: #fff;
+}
+
+.time-tree .row:nth-child(odd) {
+  fill: #f3f3f3;
+}
+
+.time-tree .bar rect {
+  stroke-width: 1;
+}
+
+.time-tree .duration {
+  font-size: 10px;
+  font-weight: normal;
+}
+
+.time-tree .network rect, .time-tree .network.label.has-children circle {
+  fill: rgb(91, 141, 223);
+  stroke: rgb(95, 136, 205);
+}
+
+.time-tree .layout rect, .time-tree .layout.label.has-children circle {
+  fill: rgb(237, 185, 56);
+  stroke: rgb(212, 169, 56);
+}
+
+.time-tree .javascript rect, .time-tree .javascript.label.has-children circle {
+  fill: rgb(134, 96, 227);
+  stroke: rgb(131, 99, 207);
+}

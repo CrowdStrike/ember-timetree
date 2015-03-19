@@ -57,38 +57,52 @@ a start time, and an end time. Here is the full set of fields.
 
 ### Selection
 
-To listen for timetree clicks, set the `selectionBinding` attribute on the
-view. Upon the user selecting a row, the binding will contain the selected
-row's `content` field, or the row object itself if `content` is empty.
+To bind to the currently selected row of the timetree, set the `time-tree`'s
+`selection` attribute. Upon the user selecting a row, the binding will contain
+the selected row's `content` field, or the row object itself if `content` is
+empty.
 
 ember-timetree won't transform the `content` field but it may transform the row
 object, so don't count on the latter being identical to your original input.
 
 ### Resize on Collapse
 
-If you set the 'resizeOnCollapse' attribute to true on the view, the height of
-the tree will resize when collapsing a node. This is nice when you have really
-long tree and you do not want white space when a node is collapsed.
+If you set the `resizeOnCollapse` attribute to true, the height of the tree
+will resize when collapsing a node. This is nice when you have really long tree
+and you do not want white space when a node is collapsed.
 
 ### Brush View
 
 Want to zoom and drag to focus anywhere on your timeline? After the main view,
-add a `Ember.Timetree.TimetreeBrushView`, and link the two via the
-`rangeBinding` and `brushRangeBinding` attributes, respectively.
+add a `{{time-tree-brush}}`, and link the two via the `range` and `brushRange`
+attributes, respectively.
+
+```handlebars
+{{time-tree content=yourTimetreeArray range=yourRange}}
+{{time-tree-brush content=yourTimetreeArray brushRange=yourRange}}
+```
 
 ![brush view](https://crowdstrike.github.io/ember-timetree/examples/screenshot_brush.png "brush view")
 
 ### Extending
 
-Many methods on `TimetreeView` are ripe for extending. For example, to override
-the built-in date/time format:
+Many methods on `time-tree` can be extended. For example, to override the
+built-in date/time format:
 
 ```javascript
-App.MyTimetreeView = Ember.Timetree.TimetreeView.extend({
+import Ember from 'ember';
+
+import TimeTreeComponent from 'ember-timetree/components/time-tree';
+
+const MyTimeTreeComponent = TimeTreeComponent.extend({
   timeFormat: Ember.computed(function() {
+    /* global d3 */
     return d3.time.format.utc("your D3 date format here");
   }).property()
 });
+
+export default MyTimeTreeComponent;
+
 ```
 
 ### Default View Options

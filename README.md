@@ -6,19 +6,16 @@ Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) 
 
 Peep [the demo](http://crowdstrike.github.io/ember-timetree).
 
+## Installation
+
+```
+ember install:addon ember-timetree
+```
+
 ## Basic Usage
 
-Include the following on your page:
-
-1. [Ember](http://emberjs.com)
-2. [D3](http://d3js.org)
-3. `ember-timetree.js`
-4. Styles to get you started: <a href="examples/css/timetree_basic.css"><code>timetree_basic.css</code></a> (SVG default styles don't work so well with Timetree)
-
-An example of the simplest view in your Handlebars,
-
 ```handlebars
-{{view Ember.Timetree.TimetreeView contentBinding="YourApp.YourTimetreeArray"}}
+{{time-tree content=yourTimetreeArray}}
 ```
 
 where `YourTimetreeArray` is an array of objects representing **the rows** of the timetree.

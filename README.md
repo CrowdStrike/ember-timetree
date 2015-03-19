@@ -18,11 +18,13 @@ ember install:addon ember-timetree
 {{time-tree content=yourTimetreeArray}}
 ```
 
-where `YourTimetreeArray` is an array of objects representing **the rows** of the timetree.
+where `YourTimetreeArray` is an array of objects representing **the rows** of
+the timetree.
 
 ## Row Object
 
-Each row object is a plain JavaScript object defining at least a display name, a start time, and an end time. Here is the full set of fields.
+Each row object is a plain JavaScript object defining at least a display name,
+a start time, and an end time. Here is the full set of fields.
 
 ```javascript
 {
@@ -55,23 +57,31 @@ Each row object is a plain JavaScript object defining at least a display name, a
 
 ### Selection
 
-To listen for timetree clicks, set the `selectionBinding` attribute on the view. Upon the user selecting a row, the binding will contain the selected row's `content` field, or the row object itself if `content` is empty.
+To listen for timetree clicks, set the `selectionBinding` attribute on the
+view. Upon the user selecting a row, the binding will contain the selected
+row's `content` field, or the row object itself if `content` is empty.
 
-ember-timetree won't transform the `content` field but it may transform the row object, so don't count on the latter being identical to your original input.
+ember-timetree won't transform the `content` field but it may transform the row
+object, so don't count on the latter being identical to your original input.
 
 ### Resize on Collapse
 
-If you set the 'resizeOnCollapse' attribute to true on the view, the height of the tree will resize when collapsing a node. This is nice when you have really long tree and you do not want white space when a node is collapsed.
+If you set the 'resizeOnCollapse' attribute to true on the view, the height of
+the tree will resize when collapsing a node. This is nice when you have really
+long tree and you do not want white space when a node is collapsed.
 
 ### Brush View
 
-Want to zoom and drag to focus anywhere on your timeline? After the main view, add a `Ember.Timetree.TimetreeBrushView`, and link the two via the `rangeBinding` and `brushRangeBinding` attributes, respectively.
+Want to zoom and drag to focus anywhere on your timeline? After the main view,
+add a `Ember.Timetree.TimetreeBrushView`, and link the two via the
+`rangeBinding` and `brushRangeBinding` attributes, respectively.
 
 ![brush view](https://crowdstrike.github.io/ember-timetree/examples/screenshot_brush.png "brush view")
 
 ### Extending
 
-Many methods on `TimetreeView` are ripe for extending. For example, to override the built-in date/time format:
+Many methods on `TimetreeView` are ripe for extending. For example, to override
+the built-in date/time format:
 
 ```javascript
 App.MyTimetreeView = Ember.Timetree.TimetreeView.extend({
@@ -108,7 +118,8 @@ selection:      null,      // bind this to the selected row
 brushRange:     null,      // bind this to a TimetreeBrushView
 ```
 
-View-source on [the demo page](http://crowdstrike.github.io/ember-timetree) to get more ideas how to tweak ember-timetree to your liking.
+View-source on [the demo page](http://crowdstrike.github.io/ember-timetree) to
+get more ideas how to tweak ember-timetree to your liking.
 
 ## Development
 

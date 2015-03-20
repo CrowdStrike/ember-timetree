@@ -1,5 +1,7 @@
 'use strict';
 
+var path = require('path');
+
 module.exports = {
   normalizeEntityName: function() {
     // this prevents an error when the entityName is
@@ -8,7 +10,8 @@ module.exports = {
   },
 
   afterInstall: function() {
-    var json = require('../../../../bower.json');
-    return this.addBowerPackageToProject('d3', json.version);
+    var bowerJsonPath = path.join(__dirname, '..', '..', 'bower.json');
+    var bowerJson = require(bowerJsonPath);
+    return this.addBowerPackageToProject('d3', bowerJson.devDependencies.d3);
   }
 };

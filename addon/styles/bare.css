@@ -1,0 +1,118 @@
+.time-tree, .time-tree-brush {
+  shape-rendering: crispEdges;
+}
+
+.time-tree text, .time-tree-brush text {
+  shape-rendering: geometricPrecision;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.time-tree .row, .time-tree-brush .row {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.time-tree .row.hover, .time-tree-brush .row.hover {
+  fill: #e3e3e3;
+}
+
+.time-tree .row.selected, .time-tree-brush .row.selected {
+  fill: #e3e3e3;
+}
+
+.time-tree .link, .time-tree-brush .link {
+  fill: none;
+  stroke: #b3b3b3;
+  stroke-width: 1px;
+}
+
+.time-tree .label text, .time-tree-brush .label text {
+  cursor: pointer;
+  fill: #1a1a1a;
+}
+
+.time-tree .label circle, .time-tree-brush .label circle {
+  display: none;
+  shape-rendering: geometricPrecision;
+}
+
+.time-tree .label.has-children circle, .time-tree-brush .label.has-children circle {
+  fill: white;
+  stroke: #626366;
+  stroke-width: 2;
+  display: block;
+  cursor: pointer;
+}
+
+.time-tree .label.has-children .text, .time-tree-brush .label.has-children .text {
+  transform: translate(0, 0);
+}
+
+.time-tree .label.has-children.closed circle, .time-tree-brush .label.has-children.closed circle {
+  fill: #626366;
+}
+
+.time-tree .axis .axis-label, .time-tree-brush .axis .axis-label {
+  fill: #b3b3b3;
+  text-anchor: middle;
+}
+
+.time-tree .axis .axis-label:nth-child(1), .time-tree-brush .axis .axis-label:nth-child(1) {
+  text-anchor: start;
+}
+
+.time-tree .axis .axis-label:last-child, .time-tree-brush .axis .axis-label:last-child {
+  text-anchor: end;
+}
+
+.time-tree .seperator, .time-tree-brush .seperator {
+  stroke-width: 2;
+  stroke: #e6e6e6;
+}
+
+.time-tree .scrubber line, .time-tree-brush .scrubber line {
+  stroke: #1a1a1a;
+  stroke-width: 2;
+}
+
+.time-tree .brush .extent, .time-tree-brush .brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+}
+
+.time-tree .duration, .time-tree .section {
+  fill: #626366;
+}
+
+.time-tree .duration text, .time-tree-brush .duration text {
+  display: none;
+  fill: #fff;
+}
+
+.time-tree .sectional .whole {
+  visibility: hidden;
+}
+
+.time-tree .hover text, .time-tree-brush .hover text {
+  display: block;
+}
+
+.time-tree {
+  border-bottom: solid 2px #e6e6e6;
+}
+
+.time-tree-brush {
+  border-left: solid 2px #e6e6e6;
+}
+
+.time-tree-brush .x.axis path, .time-tree-brush .x.axis line {
+  fill: none;
+  stroke: #626366;
+  stroke-width: 2px;
+}
+
+.time-tree-brush .x.axis .domain {
+  display: none;
+}

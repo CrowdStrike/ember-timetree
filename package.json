@@ -11,12 +11,15 @@
     "build": "ember build",
     "test": "ember test"
   },
-  "repository": "",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/CrowdStrike/ember-timetree.git"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
   "author": "",
-  "license": "MIT",
+  "license": "BSD-2-Clause",
   "dependencies": {
     "ember-cli-babel": "^4.0.0"
   },

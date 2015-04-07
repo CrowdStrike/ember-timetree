@@ -1,6 +1,6 @@
 {
   "name": "ember-timetree",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Visualize hierarchical timeline data. Built with Ember.js and D3.js",
   "directories": {
     "doc": "doc",

@@ -399,7 +399,10 @@ const TimeTreeComponent = Ember.Component.extend({
         .attr('y', () => yScale.rangeBand() / 2)
         .attr('dx', 3) // padding-left
         .attr('dy', '.35em') // vertical-align: middle
-        .text(durationFormatter);
+        .text(function(obj) {
+          if (!obj.start || !obj.end) { return; }
+          return durationFormatter(obj);
+        });
     };
 
     bars.exit().remove();

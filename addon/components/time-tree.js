@@ -409,17 +409,15 @@ const TimeTreeComponent = Ember.Component.extend({
 
     bars
       .attr('transform', (n, i) => {
-        if (n.start) {
-          return 'translate(' + (xScale(n.start) + leftPadding) + ',' + yScale(i) + ')';
-        }
+        if (!n.start) { return; }
+        return 'translate(' + (xScale(n.start) + leftPadding) + ',' + yScale(i) + ')';
       })
       .classed('collapsed', n => n._children);
 
     bars.selectAll('.duration rect')
       .attr('width', n => {
-        if (n.start && n.end) {
-          return xScale(n.end) - xScale(n.start)
-        }
+        if (!n.start || !n.end) { return; }
+        return xScale(n.end) - xScale(n.start)
       })
       .attr('height', yScale.rangeBand());
 

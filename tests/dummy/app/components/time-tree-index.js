@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.Controller.extend({
+export default Ember.Component.extend({
 
   events: [
     {
@@ -39,6 +39,8 @@ export default Ember.Controller.extend({
           end: 5.5
         }
       ]);
+
+      this.rerender();
     }
   }
 

@@ -12,8 +12,8 @@
     "test": "ember test"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/CrowdStrike/ember-timetree.git"
+    "type": "git",
+    "url": "https://github.com/CrowdStrike/ember-timetree.git"
   },
   "engines": {
     "node": ">= 0.10.0"
@@ -24,6 +24,7 @@
     "ember-cli-babel": "^4.0.0"
   },
   "devDependencies": {
+    "bower": "^1.4.1",
     "broccoli-asset-rev": "^2.0.0",
     "ember-cli": "0.2.0",
     "ember-cli-app-version": "0.3.2",

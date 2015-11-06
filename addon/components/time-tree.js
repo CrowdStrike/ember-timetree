@@ -417,7 +417,7 @@ const TimeTreeComponent = Ember.Component.extend({
     bars.selectAll('.duration rect')
       .attr('width', n => {
         if (!n.start || !n.end) { return; }
-        return xScale(n.end) - xScale(n.start)
+        return xScale(n.end) - xScale(n.start);
       })
       .attr('height', yScale.rangeBand());
 

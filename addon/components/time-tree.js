@@ -165,7 +165,7 @@ const TimeTreeComponent = Ember.Component.extend({
   svg: Ember.computed(function() {
     var element = this.get('element');
     return element ? d3.select(element) : null;
-  }).property('element'),
+  }).property(),
 
   rootNode: Ember.computed(function() {
     let nodes = this.get('content');
@@ -202,15 +202,15 @@ const TimeTreeComponent = Ember.Component.extend({
       }
     };
 
-    computeTotal([this.get('rootNode')]);
+  computeTotal([this.get('rootNode')]);
     return total;
   }).property('rootNode'),
 
-  adjustXScaleRange: Ember.on('init', Ember.observer(function() {
+  adjustXScaleRange: Ember.on('init', Ember.observer('barsWidth', function() {
     this.get('xScale').range([0, this.get('barsWidth')]);
-  }, 'barsWidth')),
+  })),
 
-  adjustYScaleRange: Ember.on('init', Ember.observer(function() {
+  adjustYScaleRange: Ember.on('init', Ember.observer('barsHeight', 'rowHeight', 'rowSpacing', function() {
     // TODO: This is a copy of `yScale`, clean it up
     let rowHeight = this.get('rowHeight');
     let rowSpacing = this.get('rowSpacing');
@@ -221,20 +221,20 @@ const TimeTreeComponent = Ember.Component.extend({
         paddingFactor,
         paddingFactor / 2
       );
-  }, 'barsHeight', 'rowHeight', 'rowSpacing')),
+  })),
 
-  adjustScrubberHeight: Ember.observer(function() {
+  adjustScrubberHeight: Ember.observer('contentHeight', function() {
     if (this.get('scrubbable')) {
       let height = this.get('contentHeight');
       let scrubber = this.get('svg').select('.scrubber');
       scrubber.select('line').attr('y2', height);
       scrubber.select('text').attr('y', height);
     }
-  }, 'contentHeight'),
+  }),
 
-  updateXAxisScale: Ember.on('init', Ember.observer(function() {
+  updateXAxisScale: Ember.on('init', Ember.observer('xScale', function() {
     this.get('xAxis').scale(this.get('xScale'));
-  }, 'xScale')),
+  })),
 
   updateRows(rowItems) {
     let yScale = this.get('yScale').copy();
@@ -465,9 +465,9 @@ const TimeTreeComponent = Ember.Component.extend({
     }
   },
 
-  nodesNeedRerender: Ember.observer(function() {
+  nodesNeedRerender: Ember.observer('rootNode', 'height', '_width', '_range.[]', function() {
     Ember.run.once(this, 'renderNodes');
-  }, 'rootNode', 'height', '_width', '_range.[]'),
+  }),
 
   doHighlight(y) {
     if (!this.get('selectable')) { return; }

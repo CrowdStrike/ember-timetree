@@ -165,7 +165,7 @@ const TimeTreeComponent = Ember.Component.extend({
   svg: Ember.computed(function() {
     var element = this.get('element');
     return element ? d3.select(element) : null;
-  }).property('element'),
+  }).property(),
 
   rootNode: Ember.computed(function() {
     let nodes = this.get('content');
@@ -202,15 +202,15 @@ const TimeTreeComponent = Ember.Component.extend({
       }
     };
 
-    computeTotal([this.get('rootNode')]);
+  computeTotal([this.get('rootNode')]);
     return total;
   }).property('rootNode'),
 
-  adjustXScaleRange: Ember.on('init', Ember.observer(function() {
+  adjustXScaleRange: Ember.on('init', Ember.observer('barsWidth', function() {
     this.get('xScale').range([0, this.get('barsWidth')]);
-  }, 'barsWidth')),
+  })),
 
-  adjustYScaleRange: Ember.on('init', Ember.observer(function() {
+  adjustYScaleRange: Ember.on('init', Ember.observer('barsHeight', 'rowHeight', 'rowSpacing', function() {
     // TODO: This is a copy of `yScale`, clean it up
     let rowHeight = this.get('rowHeight');
     let rowSpacing = this.get('rowSpacing');
@@ -221,20 +221,20 @@ const TimeTreeComponent = Ember.Component.extend({
         paddingFactor,
         paddingFactor / 2
       );
-  }, 'barsHeight', 'rowHeight', 'rowSpacing')),
+  })),
 
-  adjustScrubberHeight: Ember.observer(function() {
+  adjustScrubberHeight: Ember.observer('contentHeight', function() {
     if (this.get('scrubbable')) {
       let height = this.get('contentHeight');
       let scrubber = this.get('svg').select('.scrubber');
       scrubber.select('line').attr('y2', height);
       scrubber.select('text').attr('y', height);
     }
-  }, 'contentHeight'),
+  }),
 
-  updateXAxisScale: Ember.on('init', Ember.observer(function() {
+  updateXAxisScale: Ember.on('init', Ember.observer('xScale', function() {
     this.get('xAxis').scale(this.get('xScale'));
-  }, 'xScale')),
+  })),
 
   updateRows(rowItems) {
     let yScale = this.get('yScale').copy();
@@ -399,19 +399,26 @@ const TimeTreeComponent = Ember.Component.extend({
         .attr('y', () => yScale.rangeBand() / 2)
         .attr('dx', 3) // padding-left
         .attr('dy', '.35em') // vertical-align: middle
-        .text(durationFormatter);
+        .text(function(obj) {
+          if (!obj.start || !obj.end) { return; }
+          return durationFormatter(obj);
+        });
     };
 
     bars.exit().remove();
 
     bars
       .attr('transform', (n, i) => {
+        if (!n.start) { return; }
         return 'translate(' + (xScale(n.start) + leftPadding) + ',' + yScale(i) + ')';
       })
       .classed('collapsed', n => n._children);
 
     bars.selectAll('.duration rect')
-      .attr('width', n => xScale(n.end) - xScale(n.start))
+      .attr('width', n => {
+        if (!n.start || !n.end) { return; }
+        return xScale(n.end) - xScale(n.start);
+      })
       .attr('height', yScale.rangeBand());
 
     bars.call(function(sel) {
@@ -458,9 +465,9 @@ const TimeTreeComponent = Ember.Component.extend({
     }
   },
 
-  nodesNeedRerender: Ember.observer(function() {
+  nodesNeedRerender: Ember.observer('rootNode', 'height', '_width', '_range.[]', function() {
     Ember.run.once(this, 'renderNodes');
-  }, 'rootNode', 'height', '_width', '_range.[]'),
+  }),
 
   doHighlight(y) {
     if (!this.get('selectable')) { return; }
@@ -512,7 +519,7 @@ const TimeTreeComponent = Ember.Component.extend({
     bars.each(function() {
       // FIXME: This should be data based
       let transform = this.getAttribute('transform');
-      let match = self._translateRegex.exec(transform);
+      let match = self._extractTransform(transform);
       let relStart = Number(match[1]);
 
       d3.select(this).selectAll('.duration').classed('hover', function() {
@@ -527,10 +534,14 @@ const TimeTreeComponent = Ember.Component.extend({
   _currentScrubberX() {
     let scrubber = this.get('svg').select('.scrubber');
     let transform = !scrubber.empty() && scrubber.attr('transform');
-    let match = this._translateRegex.exec(transform) || [];
+    let match = this._extractTransform(transform);
     let translateX = match[1];
 
     return translateX ? Number(translateX) : undefined;
+  },
+
+  _extractTransform(transform) {
+    return this._translateRegex.exec(transform) || [NaN, NaN];
   },
 
   doBrush() {
@@ -639,9 +650,11 @@ const TimeTreeComponent = Ember.Component.extend({
           return isSelected;
         });
 
-        self.set('selection', rowItems.filter('.selected').data().map(function (item) {
-          return item.content || item;
-        }));
+        Ember.run.scheduleOnce('afterRender', self, function() {
+          self.set('selection', rowItems.filter('.selected').data().map(function (item) {
+            return item.content || item;
+          }));
+        });
       });
     }
 
@@ -653,16 +666,20 @@ const TimeTreeComponent = Ember.Component.extend({
   },
 
   setupWindowResizeListener: Ember.on('didInsertElement', function() {
-    Ember.$(window).on('resize.' + this.get('elementId'), Ember.run.bind(this, 'windowDidResize'));
+    this.resizeBindingId = `resize.{this.get("elementId")}`;
+    Ember.$(window).on(this.resizeBindingId, Ember.run.bind(this, 'windowDidResize'));
     this.windowDidResize();
   }),
 
   teardownWindowResizeListener: Ember.on('willDestroyElement', function() {
-    Ember.$(window).off('resize.' + this.get('elementId'));
+    if (!this.resizeBindingId) { return; }
+    Ember.$(window).off(this.resizeBindingId);
   }),
 
   windowDidResize() {
-    this.notifyPropertyChange('maximumWidth');
+    Ember.run.scheduleOnce('afterRender', this, function() {
+      this.notifyPropertyChange('maximumWidth');
+    });
   }
 });
 

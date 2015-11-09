@@ -1,86 +1,23 @@
 // Copyright (C) 2015 CrowdStrike, Inc. and contributors
 // This file is subject to the terms and conditions of the BSD License.
 // See the file LICENSE.md in the main directory for details
-
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
+import fixtures from '../../helpers/fixtures';
 
-moduleForComponent('time-tree');
-
-test('it renders', function(assert) {
-  assert.expect(2);
-
-  let component = this.subject();
-  assert.equal(component._state, 'preRender');
-
-  this.render();
-  assert.equal(component._state, 'inDOM');
+moduleForComponent('time-tree', 'Unit | Component | time tree', {
+  unit: true
 });
-
 
 test('it renders content', function(assert) {
   assert.expect(1);
-
-  let events = [{
-      'id': 1,
-      'label': 'One',
-      'start': 1347800918,
-      'end': 1347802918
-  }, {
-      'id': 2,
-      'label': 'Two',
-      'start': 1347800918,
-      'end': 1347801918
-  }, {
-      'id': 3,
-      'label': 'Three',
-      'start': 1347802218,
-      'end': 1347802518,
-      'parent': 0
-  }, {
-      'id': 4,
-      'label': 'Four',
-      'start': 1347801118,
-      'end': 1347801818,
-      'parent': 1
-  }, {
-      'id': 5,
-      'label': 'Five',
-      'start': 1347801418,
-      'end': 1347802618,
-      'parent': 3
-  }, {
-      'id': 6,
-      'label': 'Six',
-      'start': 1347801218,
-      'end': 1347801618,
-      'parent': 0
-  }, {
-      'id': 7,
-      'label': 'Seven',
-      'start': 1347801418,
-      'end': 1347801618,
-      'parent': 5
-  }, {
-      'id': 8,
-      'label': 'Eight',
-      'start': 1347801519,
-      'end': 1347801720
-  }, {
-      'id': 9,
-      'label': 'Nine',
-      'start': 1347801619,
-      'end': 1347801720,
-      'parent': 7
-  }];
-
   let component = this.subject();
 
   Ember.run(function() {
-    component.set('content', events);
+    component.set('content', fixtures);
   });
 
-  assert.equal(this.$().find('.content .bar').length, 9);
+  assert.equal(this.$().find('.content .bar').length, fixtures.length);
 });
 
 test('handles transform: translate in Webkit', function(assert) {

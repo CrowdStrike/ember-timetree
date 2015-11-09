@@ -162,3 +162,4 @@ For more information on using ember-cli, visit [http://www.ember-cli.com/](http:
 ## Credits
 
 <a href="http://crowdstrike.com"><img src="https://crowdstrike.github.io/ember-timetree/examples/CrowdStrike_logo.png" alt="CrowdStrike logo" title="Crafted By CrowdStrike" width="240" height="42"/></a>
+

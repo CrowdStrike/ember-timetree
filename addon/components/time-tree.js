@@ -666,7 +666,7 @@ const TimeTreeComponent = Ember.Component.extend({
   },
 
   setupWindowResizeListener: Ember.on('didInsertElement', function() {
-    this.resizeBindingId = "resize.%@".fmt(this.get("elementId"));
+    this.resizeBindingId = `resize.{this.get("elementId")}`;
     Ember.$(window).on(this.resizeBindingId, Ember.run.bind(this, 'windowDidResize'));
     this.windowDidResize();
   }),

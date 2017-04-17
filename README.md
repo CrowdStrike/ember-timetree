@@ -1,6 +1,6 @@
 # ember-timetree - DEPRECATED
 
-##As this component is no longer in development inside Crowdstrike we are providing this code for illustrative purposes only. Please feel free to use and fork but be aware we will no longer be updating this repository to support newer versions of Ember or fixing issues.
+## As this component is no longer in development inside Crowdstrike we are providing this code for illustrative purposes only. Please feel free to use and fork but be aware we will no longer be updating this repository to support newer versions of Ember or fixing issues.
 
 Visualize hierarchical timeline data. Built with [Ember.js](http://emberjs.com) and [D3.js](http://d3js.org).
 

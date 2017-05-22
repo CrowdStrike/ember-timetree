@@ -61,11 +61,11 @@ const TimeTreeComponent = Ember.Component.extend({
 
   _translateRegex: /translate\(([\d\.]+),?\s*([\d\.]+)\)/,
 
-  minimumWidth: Ember.computed(function() {
+  minimumWidth: Ember.computed(function () {
     return this.get('labelsWidth') + 100;
   }).property('labelsWidth'),
 
-  maximumWidth: Ember.computed(function() {
+  maximumWidth: Ember.computed(function () {
     if (this.get('element')) {
       return this.$().parent().width();
     } else {
@@ -73,31 +73,37 @@ const TimeTreeComponent = Ember.Component.extend({
     }
   }).property('element').volatile(),
 
-  _width: Ember.computed(function() {
+  _width: Ember.computed(function () {
     var width = this.get('width');
-    if (width === 'auto') { width = this.get('maximumWidth'); }
+    if (width === 'auto') {
+      width = this.get('maximumWidth');
+    }
     return Math.max(this.get('minimumWidth'), width);
   }).property('width', 'maximumWidth', 'minimumWidth'),
 
-  barsHeight: Ember.computed(function() {
+  barsHeight: Ember.computed(function () {
     return (this.get('rowHeight') + this.get('rowSpacing')) * (this.get('resizeOnCollapse') ? this.get('visibleNodeCount') : this.get('content.length'));
   }).property('rowHeight', 'rowSpacing', 'content.length', 'visibleNodeCount', 'resizeOnCollapse'),
 
-  contentHeight: Ember.computed(function() {
+  contentHeight: Ember.computed(function () {
     return this.get('barsHeight') + (this.get('contentMargin.top') || 0) + (this.get('contentMargin.bottom') || 0);
   }).property('barsHeight'),
 
-  height: Ember.computed(function() {
+  height: Ember.computed(function () {
     return this.get('axisHeight') + this.get('contentHeight');
   }).property('axisHeight', 'contentHeight'),
 
-  _range: Ember.computed(function() {
+  _range: Ember.computed(function () {
     let range = this.get('range');
-    if (range && range.length === 2) { return range; }
+    if (range && range.length === 2) {
+      return range;
+    }
 
     // Some of this is a bit redundant with renderNodes
     let rootNode = this.get('rootNode');
-    if (rootNode.children.length === 0) { return []; }
+    if (rootNode.children.length === 0) {
+      return [];
+    }
 
     let tree = this.get('tree');
     let nodes = tree.nodes(rootNode).slice(1); // Skip root node
@@ -111,28 +117,30 @@ const TimeTreeComponent = Ember.Component.extend({
     return d3.select(this.get('svg').selectAll('.labels .label')[0][i]);
   },
 
-  contentWidth: Ember.computed(function() {
+  contentWidth: Ember.computed(function () {
     return this.get('_width') - this.get('labelsWidth');
   }).property('_width', 'labelsWidth'),
 
-  barsWidth: Ember.computed(function() {
+  barsWidth: Ember.computed(function () {
     return this.get('contentWidth') - (this.get('contentMargin.left') || 0) - (this.get('contentMargin.right') || 0);
   }).property('contentWidth', 'contentMargin.left', 'contentMargin.right'),
 
-  timeFormat: Ember.computed(function() {
+  timeFormat: Ember.computed(function () {
     return d3.time.format.utc('%H:%M:%S.%L');
   }).property(),
 
-  timeTickFormat: Ember.computed(function() {
+  timeTickFormat: Ember.computed(function () {
     var timeFormat = this.get('timeFormat');
-    return function(d) { return timeFormat(new Date(d)); };
+    return function (d) {
+      return timeFormat(new Date(d));
+    };
   }).property('timeFormat'),
 
-  xScale: Ember.computed(function() {
+  xScale: Ember.computed(function () {
     return d3.scale.linear().range([0, this.get('contentWidth')]).clamp(true);
   }).property(),
 
-  yScale: Ember.computed(function() {
+  yScale: Ember.computed(function () {
     let rowHeight = this.get('rowHeight');
     let rowSpacing = this.get('rowSpacing');
     let paddingFactor = rowSpacing / (rowHeight + rowSpacing);
@@ -144,7 +152,7 @@ const TimeTreeComponent = Ember.Component.extend({
       );
   }).property(),
 
-  xAxis: Ember.computed(function() {
+  xAxis: Ember.computed(function () {
     return d3.svg.axis()
       .scale(this.get('xScale'))
       .orient('bottom')
@@ -152,37 +160,46 @@ const TimeTreeComponent = Ember.Component.extend({
       .ticks(5);
   }).property(),
 
-  brush: Ember.computed(function() {
+  brush: Ember.computed(function () {
     return d3.svg.brush()
       .x(this.get('xScale'))
       .on('brush', Ember.$.proxy(this, 'doBrush'));
   }).property(),
 
-  tree: Ember.computed(function() {
+  tree: Ember.computed(function () {
     return d3.layout.tree();
   }).property(),
 
-  svg: Ember.computed(function() {
+  svg: Ember.computed(function () {
     var element = this.get('element');
     return element ? d3.select(element) : null;
   }).property('element'),
 
-  rootNode: Ember.computed(function() {
+  rootNode: Ember.computed(function () {
     let nodes = this.get('content');
-    let rootNode = { label: 'root', children: [] };
+    let rootNode = {
+      label: 'root',
+      children: []
+    };
 
     if (nodes) {
       nodes = nodes.map(node => Ember.$.extend({}, node));
 
       nodes.forEach(node => {
         let parentNode = node.parent != null ? nodes[node.parent] : rootNode;
-        if (!parentNode.children) { parentNode.children = []; }
+        if (!parentNode.children) {
+          parentNode.children = [];
+        }
         parentNode.children.push(node);
       });
 
       nodes.forEach((node, idx) => {
-        if (!node.id) { node.id = idx; }
-        if (!node.className) { node.className = ''; }
+        if (!node.id) {
+          node.id = idx;
+        }
+        if (!node.className) {
+          node.className = '';
+        }
         node.lastEnd = lastEndTime(node);
       });
     }
@@ -190,9 +207,9 @@ const TimeTreeComponent = Ember.Component.extend({
     return rootNode;
   }).property('content'),
 
-  visibleNodeCount: Ember.computed(function() {
+  visibleNodeCount: Ember.computed(function () {
     let total = 1;
-    let computeTotal = function(node) {
+    let computeTotal = function (node) {
       for (let i = 0; i < node.length; i++) {
         let n = node[i];
         if (n.children) {
@@ -206,11 +223,11 @@ const TimeTreeComponent = Ember.Component.extend({
     return total;
   }).property('rootNode'),
 
-  adjustXScaleRange: Ember.on('init', Ember.observer(function() {
+  adjustXScaleRange: Ember.on('init', Ember.observer('barsWidth', function () {
     this.get('xScale').range([0, this.get('barsWidth')]);
-  }, 'barsWidth')),
+  })),
 
-  adjustYScaleRange: Ember.on('init', Ember.observer(function() {
+  adjustYScaleRange: Ember.on('init', Ember.observer('barsHeight', 'rowHeight', 'rowSpacing', function () {
     // TODO: This is a copy of `yScale`, clean it up
     let rowHeight = this.get('rowHeight');
     let rowSpacing = this.get('rowSpacing');
@@ -221,20 +238,20 @@ const TimeTreeComponent = Ember.Component.extend({
         paddingFactor,
         paddingFactor / 2
       );
-  }, 'barsHeight', 'rowHeight', 'rowSpacing')),
+  })),
 
-  adjustScrubberHeight: Ember.observer(function() {
+  adjustScrubberHeight: Ember.observer('contentHeight', function () {
     if (this.get('scrubbable')) {
       let height = this.get('contentHeight');
       let scrubber = this.get('svg').select('.scrubber');
       scrubber.select('line').attr('y2', height);
       scrubber.select('text').attr('y', height);
     }
-  }, 'contentHeight'),
+  }),
 
-  updateXAxisScale: Ember.on('init', Ember.observer(function() {
+  updateXAxisScale: Ember.on('init', Ember.observer('xScale', function () {
     this.get('xAxis').scale(this.get('xScale'));
-  }, 'xScale')),
+  })),
 
   updateRows(rowItems) {
     let yScale = this.get('yScale').copy();
@@ -255,11 +272,16 @@ const TimeTreeComponent = Ember.Component.extend({
   },
 
   // This function is passed to d3, it's not called as a member of the View
-  durationFormatter: ({ start, end }) => (end - start) / 1000 + 's',
+  durationFormatter: ({
+    start,
+    end
+  }) => (end - start) / 1000 + 's',
 
   renderNodes() {
     let rootNode = this.get('rootNode');
-    if (rootNode.children.length === 0) { return; }
+    if (rootNode.children.length === 0) {
+      return;
+    }
 
     let tree = this.get('tree');
     let nodes = tree.nodes(rootNode).slice(1); // Skip root node
@@ -284,8 +306,7 @@ const TimeTreeComponent = Ember.Component.extend({
 
     xScale.domain(range);
     yScale.domain(d3.range(
-      this.get('resizeOnCollapse') ? this.get('visibleNodeCount') : this.get('content.length'))
-    );
+      this.get('resizeOnCollapse') ? this.get('visibleNodeCount') : this.get('content.length')));
 
     let rowItems = rows.selectAll('.row').data(nodes, n => n.id);
 
@@ -311,7 +332,7 @@ const TimeTreeComponent = Ember.Component.extend({
 
         linkItems.exit().remove();
 
-        linkItems.attr('d', function(d) {
+        linkItems.attr('d', function (d) {
           return 'M' + (d.source.depth * indentSize) + ',' + (yScale(nodes.indexOf(d.source)) + yScale.rangeBand() / 2) +
             'V' + (yScale(nodes.indexOf(d.target)) + yScale.rangeBand() / 2) + 'H' + (d.target.depth * indentSize);
         });
@@ -377,8 +398,8 @@ const TimeTreeComponent = Ember.Component.extend({
     barsEnterDurationGroup.append('rect');
     barsEnterDurationGroup.append('text');
 
-    barsEnter.call(function(sel) {
-      sel.each(function(n) {
+    barsEnter.call(function (sel) {
+      sel.each(function (n) {
         let sectionGroup;
         if (n.sections) {
           sectionGroup = d3.select(this)
@@ -394,7 +415,7 @@ const TimeTreeComponent = Ember.Component.extend({
       });
     });
 
-    applyLabel = function(selection) {
+    applyLabel = function (selection) {
       return selection
         .attr('y', () => yScale.rangeBand() / 2)
         .attr('dx', 3) // padding-left
@@ -414,8 +435,8 @@ const TimeTreeComponent = Ember.Component.extend({
       .attr('width', n => xScale(n.end) - xScale(n.start))
       .attr('height', yScale.rangeBand());
 
-    bars.call(function(sel) {
-      sel.each(function(n) {
+    bars.call(function (sel) {
+      sel.each(function (n) {
         let sectionData;
         if (n.sections) {
           sectionData = d3.select(this).selectAll('.section').data(n.sections);
@@ -458,17 +479,19 @@ const TimeTreeComponent = Ember.Component.extend({
     }
   },
 
-  nodesNeedRerender: Ember.observer(function() {
+  nodesNeedRerender: Ember.observer('rootNode', 'height', '_width', '_range.[]', function () {
     Ember.run.once(this, 'renderNodes');
-  }, 'rootNode', 'height', '_width', '_range.[]'),
+  }),
 
   doHighlight(y) {
-    if (!this.get('selectable')) { return; }
+    if (!this.get('selectable')) {
+      return;
+    }
 
     let self = this;
 
     this.get('svg').select('.rows').selectAll('.row')
-      .classed('hover', function(d, i) {
+      .classed('hover', function (d, i) {
         let top = Number(this.getAttribute('y'));
         let bottom = top + Number(this.getAttribute('height'));
         let isSelected = top <= y && y < bottom;
@@ -480,7 +503,9 @@ const TimeTreeComponent = Ember.Component.extend({
   },
 
   doScrub(x) {
-    if (!this.get('scrubbable')) { return; }
+    if (!this.get('scrubbable')) {
+      return;
+    }
 
     let svg = this.get('svg');
     let scrubber = svg.select('.content').select('.scrubber');
@@ -489,13 +514,15 @@ const TimeTreeComponent = Ember.Component.extend({
     let leftPadding = this.get('contentMargin.left') || 0;
     let self = this;
 
-    if (x === undefined) { x = 0; }
+    if (x === undefined) {
+      x = 0;
+    }
 
     scrubber.attr('transform', 'translate(' + x + ', 0)');
 
     let text = scrubber.select('text').attr('dy', -1);
 
-    text.text(x > 0 ? this.get('timeTickFormat')(xScale.invert(x-leftPadding)) : '');
+    text.text(x > 0 ? this.get('timeTickFormat')(xScale.invert(x - leftPadding)) : '');
 
     let textWidth = text.node().getComputedTextLength ? text.node().getComputedTextLength() : 0;
     if (x + textWidth * 1.5 > contentWidth) {
@@ -509,13 +536,13 @@ const TimeTreeComponent = Ember.Component.extend({
     }
 
     let bars = svg.select('.content').selectAll('.bar');
-    bars.each(function() {
+    bars.each(function () {
       // FIXME: This should be data based
       let transform = this.getAttribute('transform');
       let match = self._translateRegex.exec(transform);
       let relStart = Number(match[1]);
 
-      d3.select(this).selectAll('.duration').classed('hover', function() {
+      d3.select(this).selectAll('.duration').classed('hover', function () {
         let rect = d3.select(this).select('rect');
         let start = relStart + Number(rect.attr('x') || 0);
         let end = start + Number(rect.attr('width'));
@@ -534,7 +561,9 @@ const TimeTreeComponent = Ember.Component.extend({
   },
 
   doBrush() {
-    if (!this.get('brushable')) { return; }
+    if (!this.get('brushable')) {
+      return;
+    }
 
     var brush = this.get('brush');
 
@@ -605,7 +634,7 @@ const TimeTreeComponent = Ember.Component.extend({
     }
 
     if (scrubbable || selectable) {
-      svg.on('mousemove', function() {
+      svg.on('mousemove', function () {
         let contentWidth = self.get('contentWidth');
         let contentHeight = self.get('contentHeight');
 
@@ -625,11 +654,11 @@ const TimeTreeComponent = Ember.Component.extend({
     }
 
     if (selectable) {
-      svg.on('click', function() {
+      svg.on('click', function () {
         let rowItems = rows.selectAll('.row');
         let y = d3.mouse(svg.node())[1];
 
-        rowItems.classed('selected', function(d, i) {
+        rowItems.classed('selected', function (d, i) {
           let top = Number(this.getAttribute('y'));
           let bottom = top + Number(this.getAttribute('height'));
           let isSelected = top <= y && y < bottom;
@@ -652,12 +681,12 @@ const TimeTreeComponent = Ember.Component.extend({
     this.renderNodes();
   },
 
-  setupWindowResizeListener: Ember.on('didInsertElement', function() {
+  setupWindowResizeListener: Ember.on('didInsertElement', function () {
     Ember.$(window).on('resize.' + this.get('elementId'), Ember.run.bind(this, 'windowDidResize'));
     this.windowDidResize();
   }),
 
-  teardownWindowResizeListener: Ember.on('willDestroyElement', function() {
+  teardownWindowResizeListener: Ember.on('willDestroyElement', function () {
     Ember.$(window).off('resize.' + this.get('elementId'));
   }),
 
@@ -669,7 +698,9 @@ const TimeTreeComponent = Ember.Component.extend({
 export default TimeTreeComponent;
 
 function lastEndTime(node, count) {
-  if (!count) { count = 0; }
+  if (!count) {
+    count = 0;
+  }
   if (count > 100) {
     throw new Error('Infinite loop in children when finding lastEndTime');
   }
